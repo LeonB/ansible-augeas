@@ -347,15 +347,15 @@ def get_file_for_path(augeas_instance, path):
 
 def execute(augeas_instance, commands, validate_filepath=True):
     # validate paths
-    for command, params in commands:
-        if not 'path' in params:
-            continue
-        path = params['path']
-        validate_path(augeas_instance, path)
-        if validate_filepath:
-            r = get_file_for_path(augeas_instance, path)
-            if not r:
-                raise FileNotFound(augeas_instance, path, command, params)
+    # for command, params in commands:
+        # if not 'path' in params:
+            # continue
+        # path = params['path']
+        # validate_path(augeas_instance, path)
+        # if validate_filepath:
+            # r = get_file_for_path(augeas_instance, path)
+            # if not r:
+                # raise FileNotFound(augeas_instance, path, command, params)
     results = []
     changed = False
     for command, params in commands:
