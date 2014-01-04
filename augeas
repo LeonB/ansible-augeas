@@ -217,6 +217,7 @@ def parse_commands(commands):
         'set': ['path', 'value'],
         'rm': ['path'],
         'match': ['path'],
+        'ins': ['label', 'position', 'path'],
     }
     try:
         tokens = iter(shlex.split(commands, comments=False))
@@ -377,6 +378,13 @@ def execute(augeas_instance, commands, validate_filepath=True):
                 result = changed = True
             else:
                 result = False
+        elif command == 'ins':
+            path = params['path']
+            label = params['label']
+            position = params['position']
+            before = True if position.lower() == 'before' else False
+            augeas_instance.insert(path, label, before)
+            result = changed = True
         else: # match
             result = [{'label': s, 'value': augeas_instance.get(s)} for s in augeas_instance.match(**params)]
         results.append((command + ' ' + ' '.join(p if p else '""' for p in params.values()), result))
@@ -393,7 +401,7 @@ def main():
             loadpath=dict(default=None),
             root=dict(default=None),
             validate_filepath=dict(default='yes', type='bool'),
-            command=dict(required=False, choices=['set', 'rm', 'match']),
+            command=dict(required=False, choices=['set', 'rm', 'match', 'ins']),
             path=dict(aliases=['name', 'context']),
             value=dict(default=None),
             commands=dict(default=None),
